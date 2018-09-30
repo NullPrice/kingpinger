@@ -9,8 +9,6 @@ import (
 	"github.com/NullPrice/kingpinger/kingping"
 	"github.com/gorilla/mux"
 
-	"github.com/sparrc/go-ping"
-
 	"github.com/spf13/viper"
 )
 
@@ -22,25 +20,15 @@ type Config struct {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
-	test := kingping.JobRequest{}
-	err := decoder.Decode(&test)
+	job := kingping.JobRequest{}
+	err := decoder.Decode(&job)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	// w.WriteHeader(200)
-	fmt.Fprintf(w, "%+v", test)
-}
-
-func handlerUnused(w http.ResponseWriter, r *http.Request) {
-	pinger, err := ping.NewPinger("www.google.com")
-	pinger.SetPrivileged(true)
-	if err != nil {
-		panic(err)
-	}
-	pinger.Count = 3
-	pinger.Run()
-	fmt.Fprintf(w, "%+v", pinger.Statistics())
+	job.Process()
+	log.Printf("%+v", &job)
+	w.WriteHeader(200)
 }
 
 func main() {
