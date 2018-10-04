@@ -10,6 +10,14 @@
   version = "v1.4.7"
 
 [[projects]]
+  digest = "1:bc38c7c481812e178d85160472e231c5e1c9a7f5845d67e23ee4e706933c10d8"
+  name = "github.com/golang/mock"
+  packages = ["gomock"]
+  pruneopts = "UT"
+  revision = "c34cdb4725f4c3844d095133c6e40e448b86589b"
+  version = "v1.1.1"
+
+[[projects]]
   digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
@@ -121,10 +129,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0a2de7bae62d6a3a8e8e091532a8d91f60c858a3910363b6071a17d85a592cb6"
+  digest = "1:f96408c643e0f9fdf5f8db4ca9a2e96bceed8dbfcdca9f891a8a05f4ffc3ffc8"
   name = "golang.org/x/net"
   packages = [
     "bpf",
+    "context",
     "icmp",
     "internal/iana",
     "internal/socket",
@@ -169,6 +178,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/golang/mock/gomock",
     "github.com/gorilla/mux",
     "github.com/sparrc/go-ping",
     "github.com/spf13/viper",

@@ -6,28 +6,26 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/NullPrice/kingpinger/kingping"
+	httpadapter "github.com/NullPrice/kingpinger/pkg/adapters/http"
+
+	pinger "github.com/NullPrice/kingpinger/pkg/pinger"
 	"github.com/gorilla/mux"
 
 	"github.com/spf13/viper"
 )
 
-type Config struct {
-	port    string
-	host    string
-	service string
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
+func httpHandler(w http.ResponseWriter, r *http.Request) {
+	// Handle decoding the HTTP request body
 	decoder := json.NewDecoder(r.Body)
-	job := kingping.JobRequest{}
+	job := pinger.PingRequest{}
 	err := decoder.Decode(&job)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	job.Process()
-	log.Printf("%+v", &job)
+	// Create a new HTTP adapter since we are making an HTTP callback ping
+	httpAdapter := &httpadapter.HTTP{PingRequest: job}
+	go pinger.Process(httpAdapter)
 	w.WriteHeader(200)
 }
 
@@ -38,6 +36,6 @@ func main() {
 	viper.BindEnv("service")
 	viper.SetDefault("port", "8080")
 	var router = mux.NewRouter()
-	router.HandleFunc("/", handler).Methods("POST")
+	router.HandleFunc("/", httpHandler).Methods("POST")
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", viper.Get("port")), router))
 }
