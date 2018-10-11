@@ -1,8 +1,6 @@
 package pinger
 
 import (
-	"log"
-
 	ping "github.com/sparrc/go-ping"
 )
 
@@ -29,21 +27,15 @@ type Adapter interface {
 	GetResult() Result
 	SetPingRequest(x PingRequest)
 	GetPingRequest() PingRequest
+	SetPingDependency(x *ping.Pinger, err error)
+	GetPingDependency() *ping.Pinger
+	Run()
 }
 
 // Process a job
-func Process(a Adapter) {
-	pingRequest := a.GetPingRequest()
-	pinger, err := ping.NewPinger(pingRequest.Target)
-	if err != nil {
-		// We need proper error handling here we need to understand how the system all links together first
-		log.Fatalln(err)
-	}
-	pinger.SetPrivileged(true)
-	pinger.Count = pingRequest.Count
-	pinger.Run()
-
-	stats := pinger.Statistics()
-	a.SetResult(Result{JobID: pingRequest.JobID, Statistics: stats})
-	a.ProcessResult()
+func Process(adapter Adapter) {
+	// Set the ping dependency -- Could be done elsewhere
+	// adapter.SetPingDependency(ping.NewPinger(adapter.GetPingRequest().Target))
+	adapter.Run()
+	adapter.ProcessResult()
 }

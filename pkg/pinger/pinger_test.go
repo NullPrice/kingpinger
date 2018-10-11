@@ -1,20 +1,18 @@
-package pinger
+package pinger_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/NullPrice/kingpinger/mocks"
+	"github.com/NullPrice/kingpinger/pkg/pinger"
+	"github.com/golang/mock/gomock"
+)
 
 func TestProcess(t *testing.T) {
-	type args struct {
-		a Adapter
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			Process(tt.args.a)
-		})
-	}
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockAdapter := mock_adapter.NewMockAdapter(ctrl)
+	mockAdapter.EXPECT().Run().Times(1)
+	mockAdapter.EXPECT().ProcessResult().Times(1)
+	pinger.Process(mockAdapter)
 }

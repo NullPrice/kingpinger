@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	httpadapter "github.com/NullPrice/kingpinger/pkg/adapters/http"
+	ping "github.com/sparrc/go-ping"
 
 	pinger "github.com/NullPrice/kingpinger/pkg/pinger"
 	"github.com/gorilla/mux"
@@ -25,6 +26,7 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// Create a new HTTP adapter since we are making an HTTP callback ping
 	httpAdapter := &httpadapter.HTTP{PingRequest: job}
+	httpAdapter.SetPingDependency(ping.NewPinger(httpAdapter.GetPingRequest().Target))
 	go pinger.Process(httpAdapter)
 	w.WriteHeader(200)
 }

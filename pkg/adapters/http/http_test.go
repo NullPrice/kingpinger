@@ -1,92 +1,35 @@
 package http
 
 import (
-	"reflect"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
-	pinger "github.com/NullPrice/kingpinger/pkg/pinger"
+	"github.com/sparrc/go-ping"
+
+	"github.com/NullPrice/kingpinger/pkg/pinger"
 )
 
-func TestHTTP_ProcessResult(t *testing.T) {
-	tests := []struct {
-		name string
-		a    *HTTP
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.a.ProcessResult()
-		})
-	}
-}
+func TestProcessResult(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Testing to see if callback is properly formatted.
+		if r.Method != "POST" {
+			t.Errorf("Expected 'POST' request, got '%s'", r.Method)
+		}
 
-func TestHTTP_SetResult(t *testing.T) {
-	type args struct {
-		result pinger.Result
-	}
-	tests := []struct {
-		name string
-		a    *HTTP
-		args args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.a.SetResult(tt.args.result)
-		})
-	}
-}
+		if r.Header.Get("Content-Type") != "application/json" {
+			t.Errorf("Expected 'application/json' request, got '%s'", r.Header.Get("Content-Type"))
+		}
 
-func TestHTTP_GetResult(t *testing.T) {
-	tests := []struct {
-		name string
-		a    HTTP
-		want pinger.Result
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.a.GetResult(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("HTTP.GetResult() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+		fmt.Println(r.Header)
+	}))
+	defer ts.Close()
 
-func TestHTTP_SetPingRequest(t *testing.T) {
-	type args struct {
-		request pinger.PingRequest
+	httpAdapter := HTTP{
+		Result:      pinger.Result{"12345-67890", &ping.Statistics{}},
+		PingRequest: pinger.PingRequest{CallbackURL: ts.URL + "/callback"},
 	}
-	tests := []struct {
-		name string
-		a    *HTTP
-		args args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.a.SetPingRequest(tt.args.request)
-		})
-	}
-}
+	httpAdapter.ProcessResult()
 
-func TestHTTP_GetPingRequest(t *testing.T) {
-	tests := []struct {
-		name string
-		a    HTTP
-		want pinger.PingRequest
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.a.GetPingRequest(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("HTTP.GetPingRequest() = %v, want %v", got, tt.want)
-			}
-		})
-	}
 }
