@@ -6,8 +6,8 @@ import (
 
 // Result struct
 type Result struct {
-	JobID string `json:"job_id"`
-	*ping.Statistics
+	JobID      string `json:"job_id"`
+	Statistics *ping.Statistics
 }
 
 // PingRequest struct

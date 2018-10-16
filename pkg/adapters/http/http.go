@@ -60,6 +60,10 @@ func (httpAdapter *HTTP) GetPingRequest() pinger.PingRequest {
 
 // Run - Runs a ping process and sets updates the result struct
 func (httpAdapter *HTTP) Run() {
+	if httpAdapter.Ping == nil {
+		// If pinger has not been set manually
+		httpAdapter.SetPingDependency(ping.NewPinger(httpAdapter.GetPingRequest().Target))
+	}
 	httpAdapter.Ping.Run()
 	httpAdapter.Result = pinger.Result{JobID: httpAdapter.PingRequest.JobID, Statistics: httpAdapter.Ping.Statistics()}
 }
@@ -67,6 +71,7 @@ func (httpAdapter *HTTP) Run() {
 // SetPingDependency - Sets the ping dependency
 func (httpAdapter *HTTP) SetPingDependency(x *ping.Pinger, err error) {
 	if err != nil {
+		// TODO: We should handle this: this does an os.exit behind the scenes, we want to handle all errors as this is a client
 		log.Fatalln(err)
 	}
 	x.SetPrivileged(true)

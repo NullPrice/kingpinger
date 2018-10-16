@@ -39,24 +39,26 @@ These are layovers from the Python project, might not be used going forward
 ```json
 {
     "job_id": "402390-4942",
-    "PacketsRecv": 5,
-    "PacketsSent": 5,
-    "PacketLoss": 0,
-    "IPAddr": {
-        "IP": "216.58.210.46",
-        "Zone": ""
-    },
-    "Addr": "google.com",
-    "Rtts": [
-        15001900,
-        15003000,
-        15003100,
-        15003400,
-        15002800
-    ],
-    "MinRtt": 15001900,
-    "MaxRtt": 15003400,
-    "AvgRtt": 15002840,
-    "StdDevRtt": 508
+    "Statistics": {
+        "PacketsRecv": 5,
+        "PacketsSent": 5,
+        "PacketLoss": 0,
+        "IPAddr": {
+            "IP": "216.58.198.238",
+            "Zone": ""
+        },
+        "Addr": "google.com",
+        "Rtts": [
+            18004400,
+            18003400,
+            18003500,
+            18003400,
+            18004300
+        ],
+        "MinRtt": 18003400,
+        "MaxRtt": 18004400,
+        "AvgRtt": 18003800,
+        "StdDevRtt": 451
+    }
 }
 ```
