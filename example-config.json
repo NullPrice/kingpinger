@@ -1,0 +1,8 @@
+{
+    "port": "8080",
+    "rabbitmq": true,
+    "username": "guest",
+    "password": "guest",
+    "host": "localhost",
+    "rabbit_port": "5672"
+}

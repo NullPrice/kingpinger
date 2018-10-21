@@ -129,6 +129,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:0c088044c1c1ee83e723692442df4fec9b3f2e57f7a99773485c97adfbc31695"
+  name = "github.com/streadway/amqp"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "70e15c650864f4fc47f5d3c82ea117285480895d"
+
+[[projects]]
+  branch = "master"
   digest = "1:f96408c643e0f9fdf5f8db4ca9a2e96bceed8dbfcdca9f891a8a05f4ffc3ffc8"
   name = "golang.org/x/net"
   packages = [
@@ -182,6 +190,7 @@
     "github.com/gorilla/mux",
     "github.com/sparrc/go-ping",
     "github.com/spf13/viper",
+    "github.com/streadway/amqp",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

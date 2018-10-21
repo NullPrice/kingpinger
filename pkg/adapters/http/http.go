@@ -18,9 +18,9 @@ type HTTP struct {
 }
 
 // ProcessResult - Handles dealing with the result
-func (httpAdapter *HTTP) ProcessResult() {
+func (adapter *HTTP) ProcessResult() {
 
-	marshaledPayload, err := json.Marshal(httpAdapter.Result)
+	marshaledPayload, err := json.Marshal(adapter.Result)
 	if err != nil {
 		// We need proper error handling here we need to understand how the system all links together first
 		log.Fatalln(err)
@@ -31,7 +31,7 @@ func (httpAdapter *HTTP) ProcessResult() {
 	// 	log.Fatalln("service was not decoded correctly")
 	// }
 
-	resp, err := http.Post(httpAdapter.PingRequest.CallbackURL, "application/json", bytes.NewBuffer(marshaledPayload))
+	resp, err := http.Post(adapter.PingRequest.CallbackURL, "application/json", bytes.NewBuffer(marshaledPayload))
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -39,47 +39,47 @@ func (httpAdapter *HTTP) ProcessResult() {
 }
 
 // SetResult - Sets the result value
-func (httpAdapter *HTTP) SetResult(result pinger.Result) {
-	httpAdapter.Result = result
+func (adapter *HTTP) SetResult(result pinger.Result) {
+	adapter.Result = result
 }
 
 // GetResult - Gets result value
-func (httpAdapter *HTTP) GetResult() pinger.Result {
-	return httpAdapter.Result
+func (adapter *HTTP) GetResult() pinger.Result {
+	return adapter.Result
 }
 
 // SetPingRequest - Sets ping request
-func (httpAdapter *HTTP) SetPingRequest(request pinger.PingRequest) {
-	httpAdapter.PingRequest = request
+func (adapter *HTTP) SetPingRequest(request pinger.PingRequest) {
+	adapter.PingRequest = request
 }
 
 // GetPingRequest - Gets ping request
-func (httpAdapter *HTTP) GetPingRequest() pinger.PingRequest {
-	return httpAdapter.PingRequest
+func (adapter *HTTP) GetPingRequest() pinger.PingRequest {
+	return adapter.PingRequest
 }
 
 // Run - Runs a ping process and sets updates the result struct
-func (httpAdapter *HTTP) Run() {
-	if httpAdapter.Ping == nil {
+func (adapter *HTTP) Run() {
+	if adapter.Ping == nil {
 		// If pinger has not been set manually
-		httpAdapter.SetPingDependency(ping.NewPinger(httpAdapter.GetPingRequest().Target))
+		adapter.SetPingDependency(ping.NewPinger(adapter.GetPingRequest().Target))
 	}
-	httpAdapter.Ping.Run()
-	httpAdapter.Result = pinger.Result{JobID: httpAdapter.PingRequest.JobID, Statistics: httpAdapter.Ping.Statistics()}
+	adapter.Ping.Run()
+	adapter.Result = pinger.Result{JobID: adapter.PingRequest.JobID, Statistics: adapter.Ping.Statistics()}
 }
 
 // SetPingDependency - Sets the ping dependency
-func (httpAdapter *HTTP) SetPingDependency(x *ping.Pinger, err error) {
+func (adapter *HTTP) SetPingDependency(x *ping.Pinger, err error) {
 	if err != nil {
 		// TODO: We should handle this: this does an os.exit behind the scenes, we want to handle all errors as this is a client
 		log.Fatalln(err)
 	}
 	x.SetPrivileged(true)
-	x.Count = httpAdapter.PingRequest.Count
-	httpAdapter.Ping = x
+	x.Count = adapter.PingRequest.Count
+	adapter.Ping = x
 }
 
 // GetPingDependency - Gets the ping dependency struct
-func (httpAdapter *HTTP) GetPingDependency() *ping.Pinger {
-	return httpAdapter.Ping
+func (adapter *HTTP) GetPingDependency() *ping.Pinger {
+	return adapter.Ping
 }
